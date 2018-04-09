@@ -1,3 +1,24 @@
+ESP-WROOM-32 Bluetooth Receiver and Controller
+==============================================
+
+[esp-idf](https://github.com/espressif/esp-idf.git "Github")
+
+[esp-idf I2C](https://github.com/espressif/esp-idf/tree/master/examples/peripherals/i2c "Github")
+
+[ESP-WROOM-32 Datasheet](http://akizukidenshi.com/download/ds/espressifsystems/esp_wroom_32_datasheet_en.pdf "Github")
+
+[I2C LCD](http://akizukidenshi.com/download/ds/xiamen/AQM0802.pdf "秋月電子通商")
+
+### MEMO ###
+
+Todo :
+
+* i2clcd
+* button
+* reconnect
+
+# ----- ORIGINAL README ----- #
+
 ESP-IDF A2DP-SINK demo
 ======================
 
