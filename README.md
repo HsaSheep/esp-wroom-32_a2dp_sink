@@ -14,6 +14,7 @@ ESP-WROOM-32 Bluetooth Receiver and Controller
 Todo :
 
 * i2clcd
+* -> interface
 * button
 * reconnect
 
