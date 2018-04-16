@@ -18,6 +18,21 @@ Todo :
 * button
 * reconnect
 
+Pin :
+| ESP pin   | Name         |
+| :-------- | :----------- |
+| GPIO12    | Switch_Left  |
+| GPIO13    | Switch_Enter |
+| GPIO14    | Switch_Right |
+| :-------- | :----------- |
+| GPIO18    | SDA          |
+| GPIO19    | SCL          |
+| :-------- | :----------- |
+| GPIO22    | LRCK         |
+| GPIO25    | DATA         |
+| GPIO26    | BCK          |
+
+
 # ----- ORIGINAL README ----- #
 
 ESP-IDF A2DP-SINK demo
