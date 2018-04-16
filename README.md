@@ -19,6 +19,7 @@ Todo :
 * reconnect
 
 Pin :
+
 | ESP pin   | Name         |
 | :-------- | :----------- |
 | GPIO12    | Switch_Left  |
