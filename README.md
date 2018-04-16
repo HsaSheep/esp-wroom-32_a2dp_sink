@@ -20,14 +20,24 @@ Todo :
 
 Pin :
 
+* IF
+
 | ESP pin   | Name         |
 | :-------- | :----------- |
 | GPIO12    | Switch_Left  |
 | GPIO13    | Switch_Enter |
 | GPIO14    | Switch_Right |
+
+* I2C
+
+| ESP pin   | Name         |
 | :-------- | :----------- |
 | GPIO18    | SDA          |
 | GPIO19    | SCL          |
+
+* I2S
+
+| ESP pin   | Name         |
 | :-------- | :----------- |
 | GPIO22    | LRCK         |
 | GPIO25    | DATA         |
