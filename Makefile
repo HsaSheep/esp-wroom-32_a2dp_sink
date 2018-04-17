@@ -5,6 +5,5 @@
 
 PROJECT_NAME := a2dp_sink
 
-#include $(IDF_PATH)/make/project.mk
-include /home/hsasheep/Git/esp/esp-idf/make/project.mk
-
+include $(IDF_PATH)/make/project.mk
+#include /home/hsasheep/Git/esp/esp-idf/make/project.mk
