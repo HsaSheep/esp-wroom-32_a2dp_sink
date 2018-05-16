@@ -12,6 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#define BT_DEVICE_NAME ("HSA_Receiver(-_-)")
+//#define BT_DEVICE_NAME ("HSA_ESP_Receiver(-_-)")
+
+//#define CONFIG_A2DP_SINK_OUTPUT_INTERNAL_DAC
+
 ////////////////
 // HSA ESP BT //
 ////////////////
@@ -285,6 +290,12 @@ static void bt_av_hdl_stack_evt(uint16_t event, void *p_param);
 
 void app_main()
 {
+    char *display_string[200];
+    char *devname = BT_DEVICE_NAME;
+    char *version = "Pre      Ver.005";
+    sprintf(display_string, "////////////////\n// HSA ESP BT //\n////////////////\n                \n     Init...    \n                \n                \n%16.16s", version);
+    sprintf(display_string, "////////////////\n// HSA ESP BT //\n////////////////\nBluetooth       \nA2DP-Receiver   \n(%14.14s)\n                \n%16.16s", devname, version);
+
     i2c_master_init();
     ssd1306_init();
 
@@ -294,69 +305,73 @@ void app_main()
     //	(void *)"Hello world!\nMulitine is OK!\nAnother line", 6, NULL);
     // Screen -> 16char x 8line
     xTaskCreate(&task_ssd1306_display_text, "ssd1306_display_text", 10240,
-                (void *)"Hello world!\n \nHsa-ESP-WROOM-32\nBluetooth\nA2DP-Receiver\n////////////////\n// HSA ESP BT //\n////////////////", 6, NULL);
+                (void *)display_string, 6, NULL);
     //xTaskCreate(&task_ssd1306_contrast, "ssid1306_contrast", 10240, NULL, 6, NULL);
 
     /* Initialize NVS — it is used to store PHY calibration data */
     esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES) {
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES)
+    {
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
     }
-    ESP_ERROR_CHECK( ret );
+    ESP_ERROR_CHECK(ret);
 
     i2s_config_t i2s_config = {
 #ifdef CONFIG_A2DP_SINK_OUTPUT_INTERNAL_DAC
-        .mode = I2S_MODE_DAC_BUILT_IN,
+        .mode = I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_DAC_BUILT_IN,
 #else
-        .mode = I2S_MODE_MASTER | I2S_MODE_TX,                                  // Only TX
+        .mode = I2S_MODE_MASTER | I2S_MODE_TX, // Only TX
 #endif
         .sample_rate = 44100,
-        .bits_per_sample = 16,                                              
-        .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,                           //2-channels
+        .bits_per_sample = 16,
+        .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT, //2-channels
+        //.channel_format = I2S_CHANNEL_FMT_ONLY_RIGHT,
         .communication_format = I2S_COMM_FORMAT_I2S | I2S_COMM_FORMAT_I2S_MSB,
-        .dma_buf_count = 6,
-        .dma_buf_len = 60,                                                      //
-        .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1                                //Interrupt level 1
+        .dma_buf_count = 8,
+        .dma_buf_len = 64, //
+        //.intr_alloc_flags = ESP_INTR_FLAG_LEVEL1 //Interrupt level 1
+        .intr_alloc_flags = 0, // default interrupt priority
     };
-
 
     i2s_driver_install(0, &i2s_config, 0, NULL);
 #ifdef CONFIG_A2DP_SINK_OUTPUT_INTERNAL_DAC
     i2s_set_pin(0, NULL);
 #else
     i2s_pin_config_t pin_config = {
-        .bck_io_num = CONFIG_I2S_BCK_PIN,      //D26
-        .ws_io_num = CONFIG_I2S_LRCK_PIN,      //D22
-        .data_out_num = CONFIG_I2S_DATA_PIN,   //D25
-        .data_in_num = -1                                                       //Not used
+        .bck_io_num = CONFIG_I2S_BCK_PIN,
+        .ws_io_num = CONFIG_I2S_LRCK_PIN,
+        .data_out_num = CONFIG_I2S_DATA_PIN,
+        .data_in_num = -1 //Not used
     };
 
     i2s_set_pin(0, &pin_config);
 #endif
 
-
     ESP_ERROR_CHECK(esp_bt_controller_mem_release(ESP_BT_MODE_BLE));
 
-    esp_err_t err;
     esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
-    if ((err = esp_bt_controller_init(&bt_cfg)) != ESP_OK) {
-        ESP_LOGE(BT_AV_TAG, "%s initialize controller failed: %s\n", __func__, esp_err_to_name(ret));
+    if (esp_bt_controller_init(&bt_cfg) != ESP_OK)
+    {
+        ESP_LOGE(BT_AV_TAG, "%s initialize controller failed\n", __func__);
         return;
     }
 
-    if ((err = esp_bt_controller_enable(ESP_BT_MODE_CLASSIC_BT)) != ESP_OK) {
-        ESP_LOGE(BT_AV_TAG, "%s enable controller failed: %s\n", __func__, esp_err_to_name(ret));
+    if (esp_bt_controller_enable(ESP_BT_MODE_CLASSIC_BT) != ESP_OK)
+    {
+        ESP_LOGE(BT_AV_TAG, "%s enable controller failed\n", __func__);
         return;
     }
 
-    if ((err = esp_bluedroid_init()) != ESP_OK) {
-        ESP_LOGE(BT_AV_TAG, "%s initialize bluedroid failed: %s\n", __func__, esp_err_to_name(ret));
+    if (esp_bluedroid_init() != ESP_OK)
+    {
+        ESP_LOGE(BT_AV_TAG, "%s initialize bluedroid failed\n", __func__);
         return;
     }
 
-    if ((err = esp_bluedroid_enable()) != ESP_OK) {
-        ESP_LOGE(BT_AV_TAG, "%s enable bluedroid failed: %s\n", __func__, esp_err_to_name(ret));
+    if (esp_bluedroid_enable() != ESP_OK)
+    {
+        ESP_LOGE(BT_AV_TAG, "%s enable bluedroid failed\n", __func__);
         return;
     }
 
@@ -367,19 +382,20 @@ void app_main()
     bt_app_work_dispatch(bt_av_hdl_stack_evt, BT_APP_EVT_STACK_UP, NULL, 0, NULL);
 }
 
-
 static void bt_av_hdl_stack_evt(uint16_t event, void *p_param)
 {
     ESP_LOGD(BT_AV_TAG, "%s evt %d", __func__, event);
-    switch (event) {
-    case BT_APP_EVT_STACK_UP: {
+    switch (event)
+    {
+    case BT_APP_EVT_STACK_UP:
+    {
         /* set up device name */
-        char *dev_name = "HSA_ESP_Receiver(-_-)";
+        char *dev_name = BT_DEVICE_NAME;
         esp_bt_dev_set_device_name(dev_name);
 
         /* initialize A2DP sink */
         esp_a2d_register_callback(&bt_app_a2d_cb);
-        esp_a2d_sink_register_data_callback(bt_app_a2d_data_cb);
+        esp_a2d_register_data_callback(bt_app_a2d_data_cb);
         esp_a2d_sink_init();
 
         /* initialize AVRCP controller */
