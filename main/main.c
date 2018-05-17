@@ -12,8 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#define BT_DEVICE_NAME ("HSA_Receiver(-_-)")
-//#define BT_DEVICE_NAME ("HSA_ESP_Receiver(-_-)")
+//#define BT_DEVICE_NAME ("HSA_Receiver(-_-)")
+#define BT_DEVICE_NAME ("HSA_ESP_Receiver(-_-)")
+
+//#define PIN_LRCLK (CONFIG_I2S_LRCK_PIN)
+#define PIN_LRCLK (27)
 
 //#define CONFIG_A2DP_SINK_OUTPUT_INTERNAL_DAC
 
@@ -340,7 +343,7 @@ void app_main()
 #else
     i2s_pin_config_t pin_config = {
         .bck_io_num = CONFIG_I2S_BCK_PIN,
-        .ws_io_num = CONFIG_I2S_LRCK_PIN,
+        .ws_io_num = PIN_LRCLK,
         .data_out_num = CONFIG_I2S_DATA_PIN,
         .data_in_num = -1 //Not used
     };
